@@ -1,12 +1,11 @@
-import React from "react";
+import React from 'react';
 
 const App = () => {
   return (
     <div>
-      <h1>salut les gens</h1>
+      salut les gens
     </div>
-   
-  )
-}
+  );
+};
 
 export default App;
