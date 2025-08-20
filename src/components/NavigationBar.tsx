@@ -1,8 +1,8 @@
 type NavigationBarProps = {
-    wishlistCounter: number;
+    wishlist: string[];
 }
 
-const NavigationBar = ({ wishlistCounter }: NavigationBarProps) => {
+const NavigationBar = ({ wishlist }: NavigationBarProps) => {
     return (
         <div>
             <nav className="relative bg-gray-800">
@@ -34,7 +34,7 @@ const NavigationBar = ({ wishlistCounter }: NavigationBarProps) => {
                     </div>
                   </div>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <button>WishList ({wishlistCounter})</button>
+                    <button>WishList ({wishlist.length})</button>
                     <button type="button" className="relative rounded-full p-1 text-gray-400 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
                     <span className="absolute -inset-1.5"></span>
                     <span className="sr-only">View notifications</span>

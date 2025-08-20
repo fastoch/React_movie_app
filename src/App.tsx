@@ -23,7 +23,7 @@ const App = () => {
 
   return (
     <>
-      <NavigationBar wishlistCounter={wishlist.length} />
+      <NavigationBar wishlist={wishlist} />
       <div className='flex items-center justify-center gap-3.5 mx-auto flex-wrap'>
         {
           movies.length > 0 && movies.map((movie: MovieInterface) => (
