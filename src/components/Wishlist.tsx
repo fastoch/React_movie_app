@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { movies } from '../data/movie';
+import { movies } from '../data/movies';
 
 type WishListProps = {
   movieList: string[];

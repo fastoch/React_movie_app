@@ -1,3 +1,38 @@
+# The `updateWishlist` function in the `App` component
+
+```tsx
+const updateWishlist = (movieId: number) => {
+  const movie = movies.find((m) => m.id === movieId);
+  if (!movie) return; 
+
+  setWishlist((currentWishlist) => {
+    // if the movie is not already in the wishlist, add it
+    if (!currentWishlist.includes(movie.title)) {
+      return [...currentWishlist, movie.title];;
+    } 
+    // else, remove it
+    return currentWishlist.filter((title) => title !== movie.title);
+  })
+}
+```
+
+## The first two lines
+
+- we start by looking for the movie in the `movies` array using the built-in `find` method
+  - the `movies` array has been imported in the `App` component from /src/data/movies.ts
+- the result of the `find` method is stored in the `movie` variable
+- `if (!movie)` acts as a "**guard clause**" that is `true` only if `movies.find()` returns `undefined`
+  - if the above condition is true (no movie was found), `return` exits the `updateWishlist` function
+
+### Important note
+
+The `if (!movie) return;` line is a crucial safety check that stops the function from proceeding if the movie doesn't exist, which prevents potential errors from trying to access properties (like `movie.title`) on an `undefined` value later in the `updateWishlist` function.
+
+## The setWishlist function
+
+This is the setter function for the `wishlist` state.  
+
+
 # The "Add to wishlist" button in the Movie component
 
 For the "Add to wishlist" button in our `Movie` component to update the **counter** in our `NavigationBar`, 

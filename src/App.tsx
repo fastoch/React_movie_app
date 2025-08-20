@@ -1,6 +1,6 @@
 import Movie from './components/Movie'
 import NavigationBar from './components/NavigationBar';
-import { movies } from './data/movie';
+import { movies } from './data/movies';
 import type { MovieInterface } from './interfaces/movie';
 import { useState } from 'react';
 
@@ -9,7 +9,7 @@ const App = () => {
 
   const updateWishlist = (movieId: number) => {
     const movie = movies.find((m) => m.id === movieId);
-    if (!movie) return;
+    if (!movie) return; 
 
     setWishlist((currentWishlist) => {
       // if the movie is not already in the wishlist, add it
