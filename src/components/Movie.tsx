@@ -1,21 +1,32 @@
 import type { MovieInterface } from "../interfaces/movie";
+import { useState } from "react";
 
-interface MovieComponentInterface {
-    movieData: MovieInterface,
-    movieRate: string
+type MovieComponentProps = {
+    movieData: MovieInterface;
+    movieRate: number;
+    wishlist: string[];
+    updateWishlist: (movieId: number) => void;
 }
 
-const Movie = ({ movieData, movieRate }: MovieComponentInterface) => {   
+const Movie = ({ movieData, movieRate, wishlist, updateWishlist }: MovieComponentProps) => {
+    const [isLiked, setIsLiked] = useState<boolean>(false)
+
+    const isInWishlist = wishlist.includes(movieData.title);
+
     return (
         <div>
-            <img width={300} src={'https://image.tmdb.org/t/p/w500' + movieData.poster_path} alt="" />
+            <img className="w-[350px]" src={'https://image.tmdb.org/t/p/w500' + movieData.poster_path} alt="" />
             <h2>{movieData.title}</h2>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Like
-            </button>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Add to wishlist
-            </button>
+            <div className="flex items-center gap-1 my-2">
+                <button onClick={() => setIsLiked(!isLiked)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  {isLiked ? 'Dislike' : 'Like'}
+                </button>
+                <button onClick={() => updateWishlist(movieData.id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  {isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+                </button>
+                <img src="/star.svg" alt="star icon" className="w-4 h-4" />
+                <span>{movieRate.toFixed(1)}</span>
+            </div>
         </div>
     );
 };
