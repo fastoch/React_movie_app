@@ -24,7 +24,7 @@ const Movie = ({ movieData, movieRate, wishlist, updateWishlist }: MovieComponen
                 <button onClick={() => updateWishlist(movieData.id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   {isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
                 </button>
-                <img src="/star.svg" alt="star icon" className="w-4 h-4" />
+                <img src="/star.svg" alt="star icon" className="w-4 h-4 ml-1" />
                 <span>{movieRate.toFixed(1)}</span>
             </div>
         </div>
