@@ -30,3 +30,82 @@ Si c'est le cas, nous mettons à jour l'état pour cacher la liste.
 
 Pour éviter des fuites de mémoire, l'écouteur d'événements est automatiquement retiré lorsque la liste est 
 cachée ou que le composant est "démonté".
+
+---
+
+# The X button to remove movies from the wishlist
+
+## Pass the update function from App to Wishlist
+
+Il faut faire descendre la fonction `updateWishlist()` depuis App.tsx jusqu'au composant Wishlist.tsx
+afin que ce dernier puisse lui aussi modifier la wishlist.  
+
+Pour cela, on doit passer la fonction `updateWishlist` de App à NavigationBar puis de NavigationBar à Wishlist, 
+car App est le composant parent de NavigationBar et NavigationBar est le composant parent de Wishlist.  
+
+Dans le `return` de `App`, on passe d'abord la fonction `updateWishlist` au composant `NavigationBar`:
+```tsx
+return (
+  <>
+    <NavigationBar wishlist={wishlist} updateWishlist={updateWishlist} />
+```
+
+Ensuite, `NavigationBar` doit accepter cette nouvelle fonction et la passer à `Wishlist`.  
+Pour ça on doit updater le type des props et les props elles-mêmes en ajoutant `updateWishlist`:
+```tsx
+type NavigationBarProps = {
+    wishlist: string[];
+    updateWishlist: (movieId: number) => void;
+}
+
+const NavigationBar = ({ wishlist, updateWishlist }: NavigationBarProps) => {
+    return (
+```
+
+Toujours dans `NavigationBar`, on doit passer la fonction `updateWishlist` à `Wishlist`:
+```tsx
+<WishList movieList={wishlist} updateWishlist={updateWishlist} />
+```
+
+## Add an 'X' button to each movie 
+
+On importe d'abord les films dans le composant Wishlist:
+```tsx
+import { movies } from '../data/movie';
+```
+
+Ensuite, on modifie les props en ajoutant `updateWishlist`:
+```tsx
+type WishListProps = {
+  movieList: string[];
+  updateWishlist: (movieId: number) => void;
+}
+
+const WishList = ( { movieList, updateWishlist }: WishListProps) => {
+```
+
+On modifie enfin l'élément `<li>` qui affiche chaque film en ajoutant un bouton X de suppresion.  
+Et on ajoute à ce bouton un `onClick` event qui déclenche une fonction `handleRemove`:
+```tsx
+<li className="flex justify-between items-center px-4 py-2 hover:bg-amber-100" key={movie}>
+  <span>{movie}</span>
+  <button
+    onClick={() => handleRemove(movie)}
+    className="ml-4 p-1 text-lg leading-none text-red-500 hover:text-red-700"
+    aria-label={`Remove ${movie} from wishlist`}>
+    &times;
+  </button>
+</li>
+```
+
+## Bind the X button click to the `updateWishlist` function
+
+La fonction `handleRemove` est bien évidemment définie en amont du `return` du composant `Wishlist`:
+```tsx
+const handleRemove = (movieTitle: string) => {
+  const movie = movies.find((m) => m.title === movieTitle);
+  if (movie) {
+    updateWishlist(movie.id);
+  }
+};
+```
