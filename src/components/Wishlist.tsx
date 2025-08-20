@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
 type WishListProps = {
-  wishlist: string[];
+  movieList: string[];
 }
 
-const WishList = ( { wishlist }: WishListProps) => {
+const WishList = ( { movieList }: WishListProps) => {
   const [visible, setVisible] = useState(false);
 
   // Toggles menu visibility
@@ -13,19 +13,17 @@ const WishList = ( { wishlist }: WishListProps) => {
   return (
     <div>
       <button onClick={handleVisibility}>
-        WishList ({wishlist.length})
+        WishList ({movieList.length})
       </button>
-      {visible 
-        ? (<div className="">
-            {/* Menu content */}
-            <ul>
-              <li>Option 1</li>
-              <li>Option 2</li>
-              <li>Option 3</li>
-            </ul>
-          </div>)
-        : (<span></span>)
-      }
+      {visible && (
+        <div className="bg-amber-50 text-black rounded">
+          <ul>
+            {movieList.map((movie) => (
+              <li className="p-0.5" key={movie}>{movie}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
