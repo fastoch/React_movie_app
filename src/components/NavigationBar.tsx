@@ -1,12 +1,10 @@
-import WishList from './Wishlist';
 import { NavLink } from 'react-router-dom';
 
 type NavigationBarProps = {
     wishlist: string[];
-    updateWishlist: (movieId: number) => void;
 }
 
-const NavigationBar = ({ wishlist, updateWishlist }: NavigationBarProps) => {
+const NavigationBar = ({ wishlist }: NavigationBarProps) => {
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Movies', path: '/movies' },
@@ -56,7 +54,18 @@ const NavigationBar = ({ wishlist, updateWishlist }: NavigationBarProps) => {
                     </div>
                   </div>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <WishList movieList={wishlist} updateWishlist={updateWishlist} />
+                    <NavLink
+                        to="/wishlist"
+                        className={({ isActive }) =>
+                            `relative rounded-md px-3 py-2 text-sm font-medium ${
+                                isActive
+                                    ? 'bg-gray-900 text-white'
+                                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                            }`
+                        }
+                    >
+                        Wishlist ({wishlist.length})
+                    </NavLink>
                     <button type="button" className="relative rounded-full p-1 text-gray-400 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
                     <span className="absolute -inset-1.5"></span>
                     <span className="sr-only">View notifications</span>

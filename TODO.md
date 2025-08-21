@@ -6,7 +6,10 @@ L'idée est d'améliorer notre app avec react-router:
 - le composant App contiendra la Navbar et le routage vers les différentes pages (FAIT)
 - modifier les liens de la navbar pour naviguer entre les différentes pages (FAIT)
 - cliquer sur le poster d'un film permettra de voir les détails du film dans MovieDetails (FAIT)
-- créer une page wishlist dédiée au lieu d'un menu caché ()
+- créer une page wishlist dédiée au lieu d'un menu caché (FAIT)
+
+---
+
 - des formulaires de signin et signup permettront à un user d’entrer ses données (email, password, confirm passord)
 - Un bouton permettra de naviguer signup => signin au succès simulé du signup.
 
@@ -76,4 +79,14 @@ Pour faire ça, on doit d'abord importer userParams et nos données:
 import { useParams } from 'react-router-dom';
 import { movies } from '../data/movies';
 ```  
+
+## Transformer la wishlist en une page dédiée
+
+On déplace d'abord le fichier Wishlist.tx depuis /src/components vers /src/pages.  
+Il faudra retirer de Wishlist.tsx la logique du menu déroulant.  
+
+Ensuite, on met à jour NavigationBar en remplaçant le composant Wishlist par un lien
+`<NavLink>` qui pointera vers la nouvelle page `/wishlist` et affichera le nombre de films ajoutés.  
+
+Enfin, on ajoute la nouvelle route dans App.tsx.  
 
