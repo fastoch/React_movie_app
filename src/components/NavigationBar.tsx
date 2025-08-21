@@ -1,4 +1,5 @@
 import WishList from './Wishlist';
+import { NavLink } from 'react-router-dom';
 
 type NavigationBarProps = {
     wishlist: string[];
@@ -6,6 +7,13 @@ type NavigationBarProps = {
 }
 
 const NavigationBar = ({ wishlist, updateWishlist }: NavigationBarProps) => {
+    const navLinks = [
+        { name: 'Home', path: '/' },
+        { name: 'Movies', path: '/movies' },
+        { name: 'Sign In', path: '/signin' },
+        { name: 'Sign Up', path: '/signup' },
+    ];
+
     return (
         <div>
             <nav className="relative bg-gray-800">
@@ -29,10 +37,21 @@ const NavigationBar = ({ wishlist, updateWishlist }: NavigationBarProps) => {
                     </div>
                     <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
-                        <a href="#" aria-current="page" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-                        <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Team</a>
-                        <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Projects</a>
-                        <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Calendar</a>
+                        {navLinks.map((link) => (
+                            <NavLink
+                                key={link.name}
+                                to={link.path}
+                                className={({ isActive }) =>
+                                    `rounded-md px-3 py-2 text-sm font-medium ${
+                                        isActive
+                                            ? 'bg-gray-900 text-white'
+                                            : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                                    }`
+                                }
+                            >
+                                {link.name}
+                            </NavLink>
+                        ))}
                     </div>
                     </div>
                   </div>

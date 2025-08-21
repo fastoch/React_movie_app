@@ -1,41 +1,39 @@
-import Movie from './components/Movie'
-import NavigationBar from './components/NavigationBar';
-import { movies } from './data/movies';
-import type { MovieInterface } from './interfaces/movie';
-import { useState } from 'react';
+import { Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import Home from "./pages/Home";
+import Movies from "./pages/Movies";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import NavigationBar from "./components/NavigationBar";
+import MovieDetails from "./pages/MovieDetails";
+import { movies } from "./data/movies";
 
 const App = () => {
   const [wishlist, setWishlist] = useState<string[]>([]);
 
   const updateWishlist = (movieId: number) => {
     const movie = movies.find((m) => m.id === movieId);
-    if (!movie) return; 
+    if (!movie) return;
 
     setWishlist((currentWishlist) => {
-      // if the movie is not already in the wishlist, add it
       if (!currentWishlist.includes(movie.title)) {
-        return [...currentWishlist, movie.title];;
-      } 
-      // else, remove it
+        return [...currentWishlist, movie.title];
+      }
       return currentWishlist.filter((title) => title !== movie.title);
-    })
-  }
+    });
+  };
 
   return (
     <>
       <NavigationBar wishlist={wishlist} updateWishlist={updateWishlist} />
-      <div className='flex items-center justify-center gap-3.5 mx-auto flex-wrap'>
-        {
-          movies.length > 0 && movies.map((movie: MovieInterface) => (
-            <div key={movie.id}>
-              <Movie movieData={movie} movieRate={movie.vote_average} wishlist={wishlist} updateWishlist={updateWishlist} />     
-            </div>
-            
-          ))
-        }
-      </div>
-    </>
-   
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/movies" element={<Movies wishlist={wishlist} updateWishlist={updateWishlist} />} />
+        <Route path="/movies/:id" element={<MovieDetails />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </>  
   );
 };
 
