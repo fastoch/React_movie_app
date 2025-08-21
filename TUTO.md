@@ -1,3 +1,11 @@
+# Correction du prof
+
+https://git.alt-tools.tech/bettercallsoul-bytemerenf/allocine/-/tree/correction-session3?ref_type=heads
+
+---
+
+Ce qui suit correspond à ma version.
+
 # The `updateWishlist` function in the `App` component
 
 ```tsx
