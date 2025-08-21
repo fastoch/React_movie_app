@@ -50,7 +50,7 @@ const WishList = ( { movieList, updateWishlist }: WishListProps) => {
                 <span>{movie}</span>
                 <button
                   onClick={() => handleRemove(movie)}
-                  className="ml-4 p-1 text-lg leading-none text-red-500 hover:text-red-700"
+                  className="ml-4 p-1 text-2xl leading-none text-red-500 hover:text-red-700 transform transition-transform duration-150 hover:scale-125"
                   aria-label={`Remove ${movie} from wishlist`}>
                   &times;
                 </button>
