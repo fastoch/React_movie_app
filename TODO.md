@@ -1,0 +1,5 @@
+- améliorer notre app avec react-router
+- déplacer la logique de App dans Movies
+- créer une page wishlist dédiée
+- modifier les liens de la navbar pour naviguer entre les différentes pages
+- implémenter le composant signup
