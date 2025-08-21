@@ -1,5 +1,6 @@
 import type { MovieInterface } from "../interfaces/movie";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type MovieComponentProps = {
     movieData: MovieInterface;
@@ -15,7 +16,9 @@ const Movie = ({ movieData, movieRate, wishlist, updateWishlist }: MovieComponen
 
     return (
         <div>
-            <img className="w-[350px]" src={'https://image.tmdb.org/t/p/w500' + movieData.poster_path} alt="" />
+            <Link to={`/movies/${movieData.id}`}>
+                <img className="w-[350px]" src={'https://image.tmdb.org/t/p/w500' + movieData.poster_path} alt={movieData.title} />
+            </Link>
             <h2>{movieData.title}</h2>
             <div className="flex items-center gap-1 my-2">
                 <button onClick={() => setIsLiked(!isLiked)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
