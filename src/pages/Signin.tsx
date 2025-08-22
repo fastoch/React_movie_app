@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signin = () => {
   const [email, setEmail] = useState('');
@@ -13,11 +13,22 @@ const Signin = () => {
 
     setError(null);
 
-    // Basic validation
     if (!email || !password) {
       setError('Please enter both email and password.');
+    }
+
+    // A simple regex for email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
       return;
     }
+
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+    // In a real app, you would typically make an API call here to authenticate the user.
 
     // Simulate a successful login for demonstration
     // In a real app, we'd make an API call here
@@ -33,7 +44,7 @@ const Signin = () => {
         <h2 className="text-3xl font-bold text-center mb-6">Sign In</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="p-3 bg-red-500 bg-opacity-20 text-red-400 rounded-md">
+            <div className="p-3 bg-red-500 bg-opacity-20 text-white-400 rounded-md">
               <p>{error}</p>
             </div>
           )}
@@ -76,9 +87,14 @@ const Signin = () => {
             </button>
           </div>
         </form>
+        <p className="mt-4 text-center text-sm text-gray-400">
+          Don't have an account?{' '}
+          <Link to="/signup" className="font-medium text-indigo-400 hover:text-indigo-300">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );
 };
-
 export default Signin;

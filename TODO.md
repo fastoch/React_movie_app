@@ -10,10 +10,7 @@ L'idée est d'améliorer notre app avec react-router:
 - un formulaire sign-up permettra à un user de créer un compte (email, password, confirm passord) - **FAIT**
 - Un bouton permettra de naviguer signup => signin au succès simulé du signup. - **FAIT**
 - un formulaire sign-in permettra de simuler une connexion en redirigeant vers la page Home - **FAIT**
-
----
-
-- coder le contenu de la page Home - 
+- coder le contenu de la page Home - **FAIT**
 
 ## Modification de App et de Movies
 
@@ -173,3 +170,12 @@ Let's explain the above regex:
 - we add `useState` hooks to manage the email, password, and any potential error messages.  
 - The `useNavigate` hook is used to redirect the user to the home page (/) after a successful sign-in.
 -  The `handleSubmit` function performs basic validation, and then simulates the login.
+
+## The Home page/component
+
+- a full-page hero section that sits right below the navigation bar
+- a title with a nice gradient effect to draw the user's attention
+- a prominent 'Explore Movies' button to engage the user to visit our `/movies` page
+
+For the layout, we use `min-h-[calc(100vh-64px)]` to ensure the content fills the screen's height below
+a standard 64px navbar, providing a clean full-page experience without unnecessary scrolling.
