@@ -1,17 +1,19 @@
 # Travail du 21 août
 
 L'idée est d'améliorer notre app avec react-router:
-- installer react-router-dom via `npm i react-router-dom` (FAIT)
-- déplacer la logique de App dans Movies (FAIT)
-- le composant App contiendra la Navbar et le routage vers les différentes pages (FAIT)
-- modifier les liens de la navbar pour naviguer entre les différentes pages (FAIT)
-- cliquer sur le poster d'un film permettra de voir les détails du film dans MovieDetails (FAIT)
-- créer une page wishlist dédiée au lieu d'un menu caché (FAIT)
+- installer react-router-dom via `npm i react-router-dom` - **FAIT**
+- déplacer la logique de App dans Movies - **FAIT**
+- le composant App contiendra la Navbar et le routage vers les différentes pages - **FAIT**
+- modifier les liens de la navbar pour naviguer entre les différentes pages - **FAIT**
+- cliquer sur le poster d'un film permettra de voir les détails du film dans MovieDetails - **FAIT**
+- créer une page wishlist dédiée au lieu d'un menu caché - **FAIT**
+- un formulaire sign-up permettra à un user de créer un compte (email, password, confirm passord) - **FAIT**
+- Un bouton permettra de naviguer signup => signin au succès simulé du signup. - **FAIT**
+- un formulaire sign-in permettra de simuler une connexion en redirigeant vers la page Home - **FAIT**
 
 ---
 
-- des formulaires de signin et signup permettront à un user d’entrer ses données (email, password, confirm passord)
-- Un bouton permettra de naviguer signup => signin au succès simulé du signup.
+- coder le contenu de la page Home - 
 
 ## Modification de App et de Movies
 
@@ -90,3 +92,84 @@ Ensuite, on met à jour NavigationBar en remplaçant le composant Wishlist par u
 
 Enfin, on ajoute la nouvelle route dans App.tsx.  
 
+## The sign-up page/component
+
+We need to create a form for new users to register with their email and password.  
+Upon a simulated successful registration, they should have a success message, and 
+a button to allow them to access the sign-in page.  
+
+For this sign-up page, we'll need the following imports:
+```tsx
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+```
+- The first import is for our state variables (email, password, confirmPassword, and pwdError)
+- The second import is to add an event listener on the form (`handleSubmit`)
+- The last import is a module that allows us to redirect the user to the sign-in page
+
+Then, we create our states variables:
+```tsx
+const Signup = () => {
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [pwdError, setPwdError] = useState<string | null>(null);
+  const [isSignedUp, setIsSignedUp] = useState(false);
+  const navigate = useNavigate();
+```
+- the `isSignedUp` state variable will help us toggle between showing the signup form and the success message.
+
+After that, we implement the handleSubmit function: 
+```tsx
+const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault(); // prevents the page from reloading on form submit
+
+  // reset the error messages for the next submission
+  setPwdError(null);
+  setEmailError(null);
+
+  // A simple regex for email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    setEmailError('Please enter a valid email address.');
+    return;
+  }
+
+  if (password.length < 8) {
+    setPwdError('Password must be at least 8 characters long.');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setPwdError("Passwords don't match.");
+    return;
+  }
+
+  // On successful signup, update the state variable to true
+  setIsSignedUp(true);
+};
+```
+
+### email address validation
+
+`/^[^\s@]+@[^\s@]+\.[^\s@]+$/`  
+which can be broken down in this way: `/^` + `[^\s@]+` + `@` + `[^\s@]+` + `\.` + `[^\s@]+` + `$/`  
+
+Let's explain the above regex:
+- the slashes `/` mark the beginning and the end of the regular expression
+- the first anchor `^` indicates the start of the pattern (nothing can come before it)
+- `[^\s@]+`: one or more characters that are not a whitespace character or an @ symbol
+- `@`: the @ symbol that separates the username from the domain
+- another `[^\s@]+` for the domain name (the first one was for the username)
+- `\.`: the backslash is an escape character that is needed because a simple dot would mean 'any character'
+- another `[^\s@]+`for the top-level domain (TLD), such as `com`, `net`
+- the final `$` indicates the end of the pattern (nothing can come after it)
+
+## The sign-in page/component
+
+- We need the same imports as for the sign-up page.  
+- we add `useState` hooks to manage the email, password, and any potential error messages.  
+- The `useNavigate` hook is used to redirect the user to the home page (/) after a successful sign-in.
+-  The `handleSubmit` function performs basic validation, and then simulates the login.
