@@ -1,38 +1,26 @@
-import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
+type FormInputs = {
+  email: string;
+  password: string;
+};
+
 const Signin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>();
 
-    setError(null);
-
-    if (!email || !password) {
-      setError('Please enter both email and password.');
-    }
-
-    // A simple regex for email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address.');
-      return;
-    }
-
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters long.');
-      return;
-    }
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
     // In a real app, you would typically make an API call here to authenticate the user.
 
     // Simulate a successful login for demonstration
     // In a real app, we'd make an API call here
-    console.log('Signing in with:', { email, password });
+    console.log('Signing in with:', data);
 
     // Navigate to the home page on successful sign-in
     navigate('/');
@@ -42,26 +30,25 @@ const Signin = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
       <div className="p-8 bg-gray-800 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center mb-6">Sign In</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="p-3 bg-red-500 bg-opacity-20 text-white-400 rounded-md">
-              <p>{error}</p>
-            </div>
-          )}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-300">
               Email
             </label>
             <input
               id="email"
-              name="email"
               type="email"
               autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              {...register('email', {
+                required: 'Email is required.',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Please enter a valid email address.',
+                },
+              })}
+              className={`mt-1 block w-full px-3 py-2 bg-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-600'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
             />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-300">
@@ -69,14 +56,18 @@ const Signin = () => {
             </label>
             <input
               id="password"
-              name="password"
               type="password"
               autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              {...register('password', {
+                required: 'Password is required.',
+                minLength: {
+                  value: 8,
+                  message: 'Password must be at least 8 characters long.',
+                },
+              })}
+              className={`mt-1 block w-full px-3 py-2 bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-600'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
             />
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
           </div>
           <div>
             <button

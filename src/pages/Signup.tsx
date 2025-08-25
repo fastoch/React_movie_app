@@ -1,40 +1,29 @@
 import { useState } from 'react';
-import type { FormEvent } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+// schema for our form's data
+// this provides autocompletion and type-checking for field names, validation rules, and the final submitted data
+type FormInputs = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
 const Signup = () => {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [pwdError, setPwdError] = useState<string | null>(null);
   const [isSignedUp, setIsSignedUp] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // prevents the page from reloading on form submit
+  // Object destructuring
+  const {
+    register,       // crucial method used to connect each input field to react-hook-form
+    handleSubmit,   //      
+    watch,
+    formState: { errors },
+  } = useForm<FormInputs>();  // intializes the hook
 
-    // reset the error messages for the next submission
-    setPwdError(null);
-    setEmailError(null);
-
-    // A simple regex for email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError('Please enter a valid email address.');
-      return;
-    }
-
-    if (password.length < 8) {
-      setPwdError('Password must be at least 8 characters long.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setPwdError("Passwords don't match.");
-      return;
-    }
-
+  // Explain this
+  const onSubmit: SubmitHandler<FormInputs> = () => {
     // On successful signup, update the state variable to true
     setIsSignedUp(true);
   };
@@ -54,26 +43,30 @@ const Signup = () => {
               Go to Sign In
             </button>
           </div>
-        // Otherwise, show the signup form 
+        // Otherwise, show the signup form
         ) : (
           <>
             <h2 className="text-3xl font-bold text-center mb-6">Sign Up</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                   Email
                 </label>
                 <input
                   id="email"
-                  name="email"
                   type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className={`mt-1 block w-full px-3 py-2 bg-gray-700 border ${emailError ? 'border-red-500' : 'border-gray-600'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                  autoComplete="email" // explain this
+                  {...register('email', {
+                    required: 'Email is required.',
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: 'Please enter a valid email address.',
+                    },
+                  })}
+                  className={`mt-1 block w-full px-3 py-2 bg-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-600'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                 />
-                {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
+                {/* Explain this */}
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
               </div>
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-300">
@@ -81,14 +74,18 @@ const Signup = () => {
                 </label>
                 <input
                   id="password"
-                  name="password"
                   type="password"
                   autoComplete="new-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`mt-1 block w-full px-3 py-2 bg-gray-700 border ${pwdError ? 'border-red-500' : 'border-gray-600'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                  {...register('password', {
+                    required: 'Password is required.',
+                    minLength: {
+                      value: 8,
+                      message: 'Password must be at least 8 characters long.',
+                    },
+                  })}
+                  className={`mt-1 block w-full px-3 py-2 bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-600'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                 />
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
               </div>
               <div>
                 <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-300">
@@ -96,15 +93,17 @@ const Signup = () => {
                 </label>
                 <input
                   id="confirm-password"
-                  name="confirm-password"
                   type="password"
                   autoComplete="new-password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={`mt-1 block w-full px-3 py-2 bg-gray-700 border ${pwdError ? 'border-red-500' : 'border-gray-600'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                  {...register('confirmPassword', {
+                    required: 'Please confirm your password.',
+                    validate: (value) => value === watch('password') || "Passwords don't match.",
+                  })}
+                  className={`mt-1 block w-full px-3 py-2 bg-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-600'} rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
                 />
-                {pwdError && <p className="text-red-500 text-xs mt-1">{pwdError}</p>}
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>
+                )}
               </div>
               <div>
                 <button
