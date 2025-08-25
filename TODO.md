@@ -230,3 +230,9 @@ When we provide this type to the useForm hook (`useForm<FormInputs>()`), we unlo
 a valid key in the `FormInputs` type. 
 - the `errors` object returned by `useForm` is also typed, and we get autocomplete for `errors.email`, `errors.password`, etc. And TS knows that `errors.email.message` is a valid property.  
 
+## The `register` method
+
+When we spread `{...register('email', { ...rules })}` onto an <input>, we are giving control of that input to the 
+`react-hook-form` library. It automatically handles the `onChange`, `onBlur`, `name`, and `ref` **props** needed to 
+track the input's value and **validation** state.  
+The second argument is an object where we define **validation rules** (`required`, `pattern`, `minLength`, etc.).

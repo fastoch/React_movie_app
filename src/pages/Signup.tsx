@@ -56,6 +56,7 @@ const Signup = () => {
                   id="email"
                   type="email"
                   autoComplete="email" // explain this
+                  // EXPLAIN
                   {...register('email', {
                     required: 'Email is required.',
                     pattern: {
