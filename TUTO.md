@@ -152,3 +152,94 @@ const handleRemove = (movieTitle: string) => {
   }
 };
 ```
+
+---
+
+# About react-hook-form
+
+React-hook-form simplifies state management, handles **validation** efficiently, and can improve 
+performance by reducing re-renders.  
+
+To use it, we need to remove the manual state management (`useState`) for form fields and errors.  
+Instead, we'll be using the `useForm` hook for a cleaner and more robust implementation.  
+
+- first, we need to install it with `npm i react-hook-form`
+
+## Signup Component Refactor
+
+In Signup.tsx, we'll replace the multiple `useState` calls for fields and their errors with a single `useForm` hook.  
+This hook provides: 
+- methods to **register** inputs and handle submission, 
+- along with an `errors` object for validation messages.  
+
+For the "Confirm Password" field, we'll use the `watch` function from `useForm` to validate that it matches 
+the "Password" field.  
+
+## Signin Component Refactor
+
+Same as for Signup.tsx, except for the password confirmation.
+
+## The `FormInputs` type
+
+To integrate react-hook-form with TypeScript effectively, we need to define a type that will
+act as a **"schema"** or a **"blueprint"** for our form's data.  
+
+```tsx
+type FormInputs = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+```
+
+This type tells TypeScript the exact shape of the data that react-hook-form will be managing.  
+
+When we provide this type to the useForm hook (`useForm<FormInputs>()`), we unlock full TypeScript (TS) support:
+- when we call `register()`, TS will only suggest valid field names: email, password, or confirmPassword
+- if we make a typo, like `register('emial')`, TS will immediately show an error because `emial` is not 
+a valid key in the `FormInputs` type. 
+- the `errors` object returned by `useForm` is also typed, and we get autocomplete for `errors.email`, `errors.password`, etc. And TS knows that `errors.email.message` is a valid property.  
+
+## About the `useForm()` hook
+
+```tsx
+const {
+  register,
+  handleSubmit,
+  watch,
+  formState: { errors, isSubmitting },
+} = useForm<FormInputs>();
+```
+
+The above snippet is a JavaScript feature called **object destructuring**.  
+We are calling the `useForm()` hook, which returns a **large object** full of useful **methods** and **properties**.  
+Destructuring lets us pull out only the **specific** pieces we need and assign them to local constants.
+
+## The `register` method
+
+When we spread `{...register('email', { ...rules })}` onto an <input>, we are giving control of that input to the 
+`react-hook-form` library. It automatically handles the `onChange`, `onBlur`, `name`, and `ref` **props** needed to 
+track the input's value and **validation** state.  
+
+The second argument (`{ ...rules }`) is an object where we define **validation rules** (`required`, `pattern`, `minLength`, etc.)
+
+## About the `handleSubmit` method
+
+We use it on the `<form>` element: `<form onSubmit={handleSubmit(onSubmit)}`  
+
+The `handleSubmit` method runs all our validation rules, and:
+- if validation passes, it then calls our `onSubmit` function witht the collected form data
+- if validation fails, it populates the `errors` object and stops
+
+## About the `watch` function
+
+It lets us "watch" the value of a form field in real-time.  
+In our case, it's used for the "Confirm Password" validation.  
+The rule `validate: (value) => value === watch('password')` uses `watch('password')` to get the current 
+value of the password field to ensure the two passsword fields match.
+
+## About the `formState` object
+
+It contains informatoin about the form's current state (whether it's been modified, currently submitting, etc.).  
+By writing `formState: { errors, isSubmitting }`, we are destructuring again to pull the `errors` object and 
+the `isSubmitting` property out of the `formState` object.  

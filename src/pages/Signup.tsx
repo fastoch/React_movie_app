@@ -14,12 +14,13 @@ const Signup = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const navigate = useNavigate();
 
-  // Object destructuring
+  // Object destructuring: useForm returns a large object full of useful methods and properties
   const {
     register,       // crucial method used to connect each input field to react-hook-form
-    handleSubmit,   //      
+    handleSubmit,   // wrapper function for our form's submission handler     
     watch,
-    formState: { errors },
+    // isSubmitting prevents duplicate submissions by disabling the submit button while the form is being processed 
+    formState: { errors, isSubmitting },  
   } = useForm<FormInputs>();  // intializes the hook
 
   // Explain this
@@ -109,9 +110,10 @@ const Signup = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  disabled={isSubmitting}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Sign Up
+                  {isSubmitting ? 'Signing Up...' : 'Sign Up'}
                 </button>
               </div>
             </form>
