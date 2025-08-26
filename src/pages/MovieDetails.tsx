@@ -1,9 +1,37 @@
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { movies } from '../data/movies';
+import axios from 'axios';
+import type { MovieInterface } from '../interfaces/movie';
 
 const MovieDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const movie = movies.find(m => m.id === Number(id));
+  const [movie, setMovie] = useState<MovieInterface | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMovieDetails = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=fr-FR`
+        );
+        setMovie(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des détails du film :", error);
+        setMovie(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovieDetails();
+  }, [id]);
+
+  if (loading) {
+    return <div className="text-center text-white text-2xl mt-10">Chargement...</div>;
+  }
 
   if (!movie) {
     return <div className="text-center text-white text-2xl mt-10">Movie not found!</div>;
@@ -27,6 +55,6 @@ const MovieDetails = () => {
       </div>
     </div>
   );
-}
+};
 
-export default MovieDetails
+export default MovieDetails;

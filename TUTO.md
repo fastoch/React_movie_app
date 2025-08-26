@@ -240,6 +240,72 @@ value of the password field to ensure the two passsword fields match.
 
 ## About the `formState` object
 
-It contains informatoin about the form's current state (whether it's been modified, currently submitting, etc.).  
+It contains information about the form's current state (whether it's been modified, currently submitting, etc.).  
 By writing `formState: { errors, isSubmitting }`, we are destructuring again to pull the `errors` object and 
 the `isSubmitting` property out of the `formState` object.  
+
+---
+
+# Mardi 26 août
+
+On veut remplacer nos données statiques (/src/data/movies.ts) par des appels à l'API de TMDB.  
+TMDB = https://themoviedb.org  
+
+## Axios
+
+En premier lieu, nous allons installer `axios`: `npm i axios`  
+Pour faire des requêtes HTTP vers l'API, nous allons utiliser la bibliothèque `axios`
+
+## Configurer la clé d'API TMDB
+
+Pour des raisons de sécurité, nous allons créer un fichier `.env` pour stocker la clé d'API.  
+Dans ce fichier (situé à la racine du projet), nous allons créer une variable d'environnement:
+```
+VITE_TMDB_API_KEY="votre_clé_API_TMDB_ici"
+```
+Le nom de la variable commence par `VITE_` parce qu'on a utilisé Vite pour initialiser le projet.  
+
+NE PAS OUBLIER d'ajouter `.env` au fichier `.gitignore` pour ne pas exposer la clé.  
+
+## Mise à jour du composant `Movies.tsx`
+
+Nous devons le modifier de sorte à ce qu'il récupère la liste des films populaires depuis 
+l'API de TMDB au lieu du fichier statique.  
+
+### imports
+
+On commence par supprimer l'importation statique `import { movies } from '../data/movies';`  
+On ajoute également axios aux imports.  
+Enfin, on importe `useState` et `useEffect` de React.  
+
+Nous créons un état local de `movies` avec `useState` pour stocker les films récupérés depuis l'API.  
+
+Le hook `useEffect` servira à lancer la requête `axios` vers l'**endpoint** des films populaires
+de TMDB. Ceci aura lieu une seule fois lorsque le composant sera monté.  
+
+La réponse de l'API, qui se trouve dans `response.data.results`, sera utilisée pour mettre à jour
+notre état `movies`.  
+
+## Mise à jour du composant `MovieDetails.tsx`
+
+Ici, nous voulons que ce composant récupère sur TMDB les détails d'un film spécifique via son `id`.  
+
+Comme pour `Movies.tsx`, nous allons utiliser `useState` et `useEffect` pour gérer l'état et le cycle
+de vie du composant.  
+
+Un état `loading` a été ajouté pour améliorer l'expérience utilisateyr (UX) pendant la récupération des 
+données.  
+
+Le `useEffect` dépend maintenant de l'`id` du film.  
+Si cet `id` change, la requête est relancée pour chercher les infos du nouveau film.  
+
+La logique de recherche `movies.find(...)` est remplacée par un appel `axios.get` à l'endpoint
+qui fournit les détails d'un film sur TMDB.  
+
+## Note importante
+
+Après ces modifications, les composants `Movies` et `MovieDetails` sont autonomes pour la récupération de leurs données.  
+Cependant, d'autres parties de notre application comme la page d'accueil (`Home.tsx`) ou la page `Wishlist.tsx` qui dépendaient du fichier `data/movies.ts` ne fonctionneront plus correctement. Il faudra également les adapter pour qu'elles utilisent les données de l'API.
+
+La logique de la wishlist, notamment pour la suppression d'un film, devra être revue car elle se base sur la recherche d'un film par son titre dans la liste statique pour retrouver son ID.
+

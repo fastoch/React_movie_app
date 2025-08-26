@@ -187,3 +187,9 @@ a standard 64px navbar, providing a clean full-page experience without unnecessa
 Installer et utiliser react-hook-form pour valider les données des formulaires utilisés dans les pages 
 Signin et Signup.  
 
+---
+
+# Travail du mardi 26 août
+
+- fetch popular movies + display movieDetails using TMDB's API
+- use `axios` and `useEffect(() => {}, [])`
