@@ -7,20 +7,20 @@ import Signup from "./pages/Signup";
 import NavigationBar from "./components/NavigationBar";
 import MovieDetails from "./pages/MovieDetails";
 import Wishlist from "./pages/Wishlist";
-import { movies } from "./data/movies";
 
 const App = () => {
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  // The wishlist state holds movie IDs
+  const [wishlist, setWishlist] = useState<number[]>([]);
 
   const updateWishlist = (movieId: number) => {
-    const movie = movies.find((m) => m.id === movieId);
-    if (!movie) return;
-
     setWishlist((currentWishlist) => {
-      if (!currentWishlist.includes(movie.title)) {
-        return [...currentWishlist, movie.title];
+      if (currentWishlist.includes(movieId)) {
+        // if the movie is already there, do not add it
+        return currentWishlist.filter((id) => id !== movieId);
+      } else {
+        // otherwise, add it
+        return [...currentWishlist, movieId];
       }
-      return currentWishlist.filter((title) => title !== movie.title);
     });
   };
 

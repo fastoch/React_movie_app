@@ -4,7 +4,7 @@ import Movie from '../components/Movie';
 import type { MovieInterface } from '../interfaces/movie';
 
 type MoviesProps = {
-  wishlist: string[];
+  wishlist: number[];
   updateWishlist: (movieId: number) => void;
 };
 

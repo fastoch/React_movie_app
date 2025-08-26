@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 type MovieComponentProps = {
     movieData: MovieInterface;
     movieRate: number;
-    wishlist: string[];
+    wishlist: number[];
     updateWishlist: (movieId: number) => void;
 }
 
 const Movie = ({ movieData, movieRate, wishlist, updateWishlist }: MovieComponentProps) => {
   const [isLiked, setIsLiked] = useState<boolean>(false)
 
-  const isInWishlist = wishlist.includes(movieData.title);
+  const isInWishlist = wishlist.includes(movieData.id);
 
   return (
     <div>

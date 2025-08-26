@@ -305,7 +305,32 @@ qui fournit les détails d'un film sur TMDB.
 ## Note importante
 
 Après ces modifications, les composants `Movies` et `MovieDetails` sont autonomes pour la récupération de leurs données.  
-Cependant, d'autres parties de notre application comme la page d'accueil (`Home.tsx`) ou la page `Wishlist.tsx` qui dépendaient du fichier `data/movies.ts` ne fonctionneront plus correctement. Il faudra également les adapter pour qu'elles utilisent les données de l'API.
+Cependant, d'autres parties de notre application comme la page d'accueil (`Home.tsx`) ou la page `Wishlist.tsx` qui dépendaient du fichier `data/movies.ts` ne fonctionnent plus correctement. Il faudra également les adapter pour qu'elles utilisent les données de l'API.
 
-La logique de la wishlist, notamment pour la suppression d'un film, devra être revue car elle se base sur la recherche d'un film par son titre dans la liste statique pour retrouver son ID.
+La logique de la wishlist, notamment pour la suppression d'un film, devra être revue car elle se base sur la recherche 
+d'un film par son titre dans la liste statique pour retrouver son ID.  
+
+## Mise à jour de `Home.tsx`
+
+Nous voulons aussi que ce composant récupère les films populaires depuis l'API de TMDB.  
+
+Pour cela, nous utiliserons encore une fois `useState` et `useEffect`.  
+`useState` permettra de gérer la liste `featuredMovies` et un `loading` state pour améliorer l'UX.  
+`useEffect` récupèrera les 8 films les plus populaires depuis l'API de TMDB au premier montage du composant.  
+
+A l'intérieur du hook `useEffect`, on utilisera axios nous l'avons fait pour `Movies.tsx` et `MovieDetails.tsx`.  
+
+## Mise à jour de `Wishlist.tsx`
+
+Notre wishlist stockait jusqu'ici un array de movie titles (`string[]`).  
+Pour supprimer un film, le composant Wishlist doit passer l'id du film à la méthode `updateWishlist`.  
+Avec le fichier statique `/data/movies.ts`, il était facile de chercher l'id d'un film par son titre.  
+
+Faire la même chose avec une API impliquerait de chercher le film par son titre à chaque fois qu'on veut 
+en ajouter ou en supprimer un. Ce qui ne serait pas performant et peu fiable car les titres peuvent ne pas être uniques.  
+
+### Solution
+
+La meilleur pratique consiste à stocker une liste d'identifiants uniques (`number[]`) dans notre état `wishlist`.  
+Cela rendra le système plus fiable et plus performant.  
 

@@ -193,3 +193,10 @@ Signin et Signup.
 
 - fetch popular movies + display movieDetails using TMDB's API
 - use `axios` and `useEffect(() => {}, [])`
+
+voir détails dans TUTO.md  
+
+---
+
+# Travail du mercredi 27 août
+

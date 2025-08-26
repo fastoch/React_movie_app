@@ -1,9 +1,33 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { movies } from '../data/movies';
+import axios from 'axios';
 import type { MovieInterface } from '../interfaces/movie';
 
 const Home = () => {
-  const featuredMovies: MovieInterface[] = movies.slice(0, 5);
+  const [featuredMovies, setFeaturedMovies] = useState<MovieInterface[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedMovies = async () => {
+      setLoading(true);
+      try {
+        const apiKey = import.meta.env.VITE_TMDB_API_KEY;
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=fr-FR`
+        );
+        setFeaturedMovies(response.data.results.slice(0, 8));
+      } catch (error) {
+        console.error(
+          'Erreur lors de la récupération des films populaires :',
+          error
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedMovies();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] bg-gray-900 text-white text-center p-8">
@@ -11,18 +35,22 @@ const Home = () => {
         <h2 className="text-3xl font-bold mb-8 text-gray-200 tracking-tight">
           Featured Movies
         </h2>
-        <div className="flex justify-center gap-x-6 gap-y-10 flex-wrap">
-          {featuredMovies.map((movie) => (
-            <Link to={`/movies/${movie.id}`} key={movie.id} className="group">
-              <div className="w-40 md:w-48">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  className="w-full h-auto rounded-lg shadow-lg transform transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-indigo-500/30"
-                />
-              </div>
-            </Link>
-          ))}
+        <div className="flex justify-center gap-x-6 gap-y-10 flex-wrap min-h-[288px] items-center">
+          {loading ? (
+            <p>Loading featured movies...</p>
+          ) : (
+            featuredMovies.map((movie) => (
+              <Link to={`/movies/${movie.id}`} key={movie.id} className="group">
+                <div className="w-40 md:w-48">
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={movie.title}
+                    className="w-full h-auto rounded-lg shadow-lg transform transition-transform duration-300 ease-in-out group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-indigo-500/30"
+                  />
+                </div>
+              </Link>
+            ))
+          )}
         </div>
       </div>
 

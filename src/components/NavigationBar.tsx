@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 
 type NavigationBarProps = {
-    wishlist: string[];
+    wishlist: number[];
 }
 
 const NavigationBar = ({ wishlist }: NavigationBarProps) => {
