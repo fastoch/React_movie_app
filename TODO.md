@@ -200,3 +200,8 @@ voir détails dans TUTO.md
 
 # Travail du mercredi 27 août
 
+je vais arrêter ce projet ici et cloner la branche session6 du repo du prof:  
+https://git.alt-tools.tech/bettercallsoul-bytemerenf/allocine/-/tree/session6?ref_type=heads  
+
+De là, je vais faire le travail indiqué ici:  
+https://github.com/fastoch/React-Alt.Bzh/blob/main/README.md
